@@ -96,3 +96,59 @@ bool RPG::isAlive(){
         return false;
     }
 }
+
+/**
+ * @brief attack decreases the opponent's health by (strength - opponent's defense)
+ * In other words, the opponent's defense should soften the blow from the attack
+ * 
+ * For example, if opponent's health is 100, opponent' defense is 5, and player's
+ * strength is 20, then after the attack, opponent's health should be
+ * 85 (i.e. 100 - (20-5)).
+ * 
+ * First Calculate the opponent's health, then use (*opponent).getUpdate(new_health)
+ *  to update their health.
+ * 
+ * @param opponent
+*/
+void RPG::attack(RPG * opponent){
+    int opp_health = (*opponent).getHealth();
+    // int opp_health = *opponent->getHealth();
+
+    int opp_def = (*opponent).getDefense();
+    int new_health = opp_health - (strength - opp_def);
+
+    (*opponent).updateHealth(new_health);
+}
+
+/**
+ * @brief Prompts the user to choose a skill and calls printAction() and attack()
+ * 
+ * @param opponent
+*/
+void RPG::useSkill(RPG * opponent){
+    // use a for loop to print out all the player's skills
+    for(int i=0; i<SKILL_SIZE; i++){
+        printf("Skill %i: %s\n", i, skills[i].c_str());
+    }
+
+    //create an int called chosen_skill_index
+    int chosen_skill_index;
+
+    //use a print to output "Choose a skill to use: Enter 0 or 1\n" on the terminal
+    printf("Choose a skill to use: Enter 0 or 1\n");
+
+    //get user input and assign it to chosen_skill_index
+    // (e.g. cin >> )
+    cin >> chosen_skill_index;
+
+    //assigns the chosen_skill into a string called chosen_skill
+    //no modifications needed here
+    string chosen_skill = skills[chosen_skill_index];
+
+    //call printAction(string, RPG) and use chosen_skill and (*opponent)
+    //as the parameters
+    printAction(chosen_skill, (*opponent));
+
+    //call attack on opponent
+    attack(opponent);
+}
